@@ -2,8 +2,10 @@ close all
 
 addpath('images');
 
-im1 = imread('3.jpg');
-im2 = imread('4.jpg');
+im1 = imread('13.jpg');
+im2 = imread('15.jpg');
+
+
   
 % select a single channel out of the images
 im1 = im1(1:3:end,1:3:end,1:3:end);
@@ -12,7 +14,7 @@ im2 = im2(1:3:end,1:3:end,1:3:end);
 %smooth = 2;
 smooth = 1.5;
 %thresh = 2000 ;  % Harris corner threshold
-thresh = 1000;
+thresh = 2000;
 %nonmaxrad = 10;  % Non-maximal suppression radius
 nonmaxrad = 10;
 %w = 91;         % Window size for correlation matching
@@ -59,7 +61,7 @@ x1 = [m1(2,:); m1(1,:); ones(1,length(m1))];
 x2 = [m2(2,:); m2(1,:); ones(1,length(m1))];    
     
 %t = .0001;  % Distance threshold for deciding outliers
-t = .001;
+t = .0001;
 
 % Change the commenting on the lines below to switch between the use
 % of 7 or 8 point fundamental matrix solutions, or affine
