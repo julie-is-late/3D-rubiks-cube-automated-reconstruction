@@ -3,10 +3,8 @@ close all
 addpath('images');
 
 im1 = imread('13.jpg');
-im2 = imread('15.jpg');
+im2 = imread('14.jpg');
 
-
-  
 % select a single channel out of the images
 im1 = im1(1:3:end,1:3:end,1:3:end);
 im2 = im2(1:3:end,1:3:end,1:3:end);
@@ -113,8 +111,16 @@ end
 %addpath('/home/mellor/ProfessionalArchives/Teaching/Class/csse461/problem_sets/RHIT_recontruct')
 load('calib_final.mat', 'k');
 K = k;
-% The F defined and used above is the transpose of the F defined in
-% my scripts.
+
+K = K*1/3;
+K(3,3) = 1;
+
+% fl = 1584;
+% pP = [593, 380]';
+% K = [fl, 0, pP(1);
+%      0, fl, pP(2);
+%      0,  0, 1];
+% 
 
 % POSSIBLY UNCOMMENT? - Joel
 % F = estimateF(x1(1:2,inliers), x2(1:2,inliers));
