@@ -1,6 +1,8 @@
 close all
+clear
 
 addpath('images');
+addpath(genpath('RANSAC-Toolbox'));
 
 im1 = imread('13.jpg');
 im2 = imread('14.jpg');
@@ -81,54 +83,44 @@ for n = inliers
   line([m1(2,n) m2(2,n)], [m1(1,n) m2(1,n)],'color',[0 0 1], 'LineWidth', 2)
 end
 
-%response = input('Step through each epipolar line [y/n]?\n','s');
-%if response == 'y'
-%    
-%  % Step through each matched pair of points and display the
-%  % corresponding epipolar lines on the two images.
-%    
-%  l2 = F*x1;    % Epipolar lines in image2
-%  l1 = F'*x2;   % Epipolar lines in image1
-%    
-%  % Solve for epipoles
-%  [U,D,V] = svd(F);
-%  e1 = hnormalise(V(:,3));
-%  e2 = hnormalise(U(:,3));
-% 
-%  for n = inliers
-%    figure(1), clf, imshow(im1), hold on;
-%    hline(l1(:,n)); plot(e1(1), e1(2), 'g*');
-%    plot(x1(1,n),x1(2,n),'r+');
-%    
-%    figure(2), clf, imshow(im2), hold on;
-%    hline(l2(:,n)); plot(e2(1), e2(2), 'g*');
-%    plot(x2(1,n),x2(2,n),'r+');
-%    fprintf('hit any key to see next point\r'); pause
-%  end
-%end    
-
-% USE OUR K - Joel
-%addpath('/home/mellor/ProfessionalArchives/Teaching/Class/csse461/problem_sets/RHIT_recontruct')
 load('calib_final.mat', 'k');
 K = k;
 
 K = K*1/3;
 K(3,3) = 1;
 
-% fl = 1584;
-% pP = [593, 380]';
-% K = [fl, 0, pP(1);
-%      0, fl, pP(2);
-%      0,  0, 1];
-% 
-
-% POSSIBLY UNCOMMENT? - Joel
-% F = estimateF(x1(1:2,inliers), x2(1:2,inliers));
-% F = F';
-% addpath('/home/mellor/ProfessionalArchives/Teaching/Class/csse461/matlab/reconstruction')
-% [P1, P2, X] = reconstructScene(F, K, K, x1(1:2,inliers), x2(1:2,inliers));
-
 [P1, P2, X] = get3dreconstruction(x1(1:2,inliers), x2(1:2,inliers), K);
 
 figure(5)
 plotPoints(X)
+
+options.epsilon = 1e-6;
+options.P_inlier = 0.99;
+options.sigma = 0.01;
+options.est_fun = @estimateplane;
+options.man_fun = @estimateplane_error;
+options.mode = 'MSAC';
+options.Ps = [];
+options.notify_iters = [];
+options.min_iters = 1000;
+options.fix_seed = false;
+options.reestimate = true;
+options.stabilize = false;
+
+[results1, options] = RANSAC(X, options);
+ind1 = results1.CS;
+figure(6)
+plotPoints(X(:, ind1))
+
+X2 = X(:, ~ind1);
+[results2, options] = RANSAC(X2, options);
+ind2 = results2.CS;
+figure(7)
+plotPoints(X2(:, ind2))
+
+X3 = X(:, ~ind2);
+[results3, options] = RANSAC(X3, options);
+ind3 = results3.CS;
+figure(8)
+plotPoints(X3(:, ind3))
+

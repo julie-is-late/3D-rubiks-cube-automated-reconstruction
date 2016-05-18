@@ -54,6 +54,7 @@ function [ P1, X ] = findp( P1full, P2, ps1, ps2, K )
             P1 = currentP;
             foundX = true;
             disp(['it was the ' num2str(i) 'th P1'])
+            disp(P1)
         end
     end
 
