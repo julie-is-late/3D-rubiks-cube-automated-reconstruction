@@ -129,7 +129,7 @@ edg1 = convhull(x1(1,:), x1(2,:));
 
 % ind1 relative to X but edg1 RELATIVE TO X1
 for i=1:length(X)
-    if ismember(i, edg1)
+    if ismember(X(:,i), X1(:,edg1))
         ind1(i) = 0;
     end
 end
@@ -159,7 +159,7 @@ end
 edg2 = convhull(x2(1,:), x2(2,:));
 
 for i=1:length(X2set)
-    if ismember(i, edg2)
+    if ismember(X2set(:,i), X2(:,edg2))
         ind2(i) = 0;
     end
 end
