@@ -68,7 +68,7 @@ x1 = [m1(2,:); m1(1,:); ones(1,length(m1))];
 x2 = [m2(2,:); m2(1,:); ones(1,length(m1))];    
     
 %t = .0001;  % Distance threshold for deciding outliers
-t = .0005;
+t = .005;
 
 % Change the commenting on the lines below to switch between the use
 % of 7 or 8 point fundamental matrix solutions, or affine
@@ -199,20 +199,20 @@ for j=1:f
     end
 end
 
-% figure(9)
-% plotPoints(X)
-% figure(6)
-% plotPoints(X(:,polys{1}))
-% 
-% figure(10)
-% plotPoints(X2set)
-% figure(7)
-% plotPoints(X(:,polys{2}))
-% 
-% figure(11)
-% plotPoints(X3set)
-% figure(8)
-% plotPoints(X(:,polys{3}))
+%  figure(9)
+%  plotPoints(X)
+%  figure(6)
+%  plotPoints(X(:,polys{1}))
+% % 
+%  figure(10)
+%  plotPoints(X2set)
+%  figure(7)
+%  plotPoints(X(:,polys{2}))
+% % 
+%  figure(11)
+%  plotPoints(X3set)
+%  figure(8)
+%  plotPoints(X(:,polys{3}))
 
 figure(5)
 plotPoints(X)
