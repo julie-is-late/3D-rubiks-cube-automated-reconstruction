@@ -217,7 +217,7 @@ end
 figure(5)
 plotPoints(X)
 
-makeUntexturedModel('output.wrl', X, polys, [0 0 1 3.14], 1)
+% makeUntexturedModel('output.wrl', X, polys, [0 0 1 3.14], 1)
 
 makeWireframe('wirecube.wrl', X, polys, [0 0 1 3.14], 1)
 makeUntexturedModel('untexcube.wrl', X, polys, [0 0 1 3.14], 1)
