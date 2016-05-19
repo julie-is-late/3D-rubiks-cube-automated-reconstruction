@@ -111,6 +111,9 @@ options.fix_seed = false;
 options.reestimate = true;
 options.stabilize = false;
 
+[~,m] = size(X);
+polys = {};
+
 [results1, options] = RANSAC(X, options);
 ind1 = results1.CS;
 X1 = X(:, ind1);
@@ -122,8 +125,23 @@ for i=1:n
     temp = P1*X1(:,i);
     x1(:,i) = temp / temp(3);
 end
-c = convhull(x1(1,:), x1(2,:));
+edg1 = convhull(x1(1,:), x1(2,:));
 
+for i=1:n
+    if ismember(n, edg1)
+        ind1(n) = 0;
+    end
+end
+
+polys{1} = [];
+[~,f] = size(edg1);
+for j=1:f
+    for k=1:m
+        if (X(k) == X1(edg1(j)))
+            polys{1} = [polys{1}, k];
+        end
+    end
+end
 
 % figure(6)
 % plotPoints(X1)
@@ -135,10 +153,100 @@ X2 = X2set(:, ind2);
 % figure(7)
 % plotPoints(X2)
 
+[~,n] = size(X2);
+x2 = zeros(3, n);
+for i=1:n
+    temp = P1*X2(:,i);
+    x2(:,i) = temp / temp(3);
+end
+edg2 = convhull(x2(1,:), x2(2,:));
+
+for i=1:n
+    if ismember(n, edg2)
+        ind2(n) = 0;
+    end
+end
+
+polys{2} = [];
+[~,f] = size(edg2);
+for j=1:f
+    for k=1:m
+        if (X(k) == X2(edg2(j)))
+            polys{2} = [polys{2}, k];
+        end
+    end
+end
+
 X3set = X(:, ~ind2);
 [results3, options] = RANSAC(X3set, options);
 ind3 = results3.CS;
 X3 = X3set(:, ind3);
 % figure(8)
 % plotPoints(X3)
+
+[~,n] = size(X3);
+x3 = zeros(3, n);
+for i=1:n
+    temp = P1*X3(:,i);
+    x3(:,i) = temp / temp(3);
+end
+edg3 = convhull(x3(1,:), x3(2,:));
+
+for i=1:n
+    if ismember(n, edg3)
+        ind3(n) = 0;
+    end
+end
+
+polys{3} = [];
+[~,f] = size(edg3);
+for j=1:f
+    for k=1:m
+        if (X(k) == X3(edg3(j)))
+            polys{3} = [polys{3}, k];
+        end
+    end
+end
+
+
+makeUntexturedModel('outputUntex.wrl', X, polys, [0 0 1 3.14], 1)
+
+world = vrworld('outputUntex.wrl');
+open(world);
+view(world);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
