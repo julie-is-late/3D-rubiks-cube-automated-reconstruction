@@ -1,0 +1,121 @@
+#VRML V2.0 utf8
+
+WorldInfo {
+ title "Wireframe model"
+}
+
+NavigationInfo {
+ headlight TRUE
+}
+
+DEF View1 Viewpoint {
+  orientation 0 1 0 3.14
+  position  0, 0, 0
+  fieldOfView 1
+  description "View 1 - Observer"
+}
+
+Background {
+  skyAngle [
+    1.39626
+    1.51844
+  ]
+  skyColor [
+    0.0 0.0 0.0
+    1.0 0.8 0.8
+    1.0 1.0 0.0
+  ]
+  groundAngle [
+    1.5708
+  ]
+  groundColor [
+    0.0 0.0 0.0
+    0.0 0.50196 0.0
+  ]
+}
+
+DEF MYPOINTS Coordinate {
+  point [
+          4.00    2.67   7.73,
+          4.07    3.13   7.81,
+          4.11    3.57   7.85,
+          4.15    3.55   7.46,
+          4.50    2.55   7.89,
+          4.24    3.97   7.54,
+          4.15    3.22   7.37,
+          4.11    2.78   7.29,
+          4.21    3.65   7.45,
+          4.56    2.62   7.55,
+          5.03    2.45   8.10,
+          4.34    4.02   7.23,
+          4.30    3.61   7.14,
+          4.22    2.83   6.99,
+          4.23    3.18   7.02,
+          4.31    3.30   7.05,
+          4.28    2.78   6.92,
+          5.04    2.51   7.72,
+          5.12    2.29   7.64,
+          4.63    2.70   7.05,
+          4.38    3.64   6.76,
+          4.52    4.07   6.90,
+          4.77    2.68   7.10,
+          4.44    3.25   6.70,
+          5.50    2.38   7.81,
+          4.74    2.72   6.95,
+          4.75    2.73   6.84,
+          4.87    3.94   7.00,
+          4.90    3.55   6.94,
+          4.92    3.16   6.90,
+          5.64    2.50   7.48,
+          5.28    3.55   7.13,
+          5.24    3.13   7.00,
+          5.25    2.65   6.96,
+          5.35    3.04   7.04,
+          5.67    3.40   7.23,
+          5.70    2.99   7.18,
+          5.70    2.56   7.08
+  ]
+}
+
+Transform {
+   rotation   0.00    0.00    1.00    3.14
+
+   children [
+
+      Shape  {
+         appearance Appearance {
+            material Material {
+          diffuseColor   1 1 1
+            }
+         }
+         geometry IndexedLineSet {
+            coord USE MYPOINTS
+            coordIndex [ 0, 4, 10, 24, 37, 33, 26, 13, 7, 0, 0, -1 ]
+         }
+      }
+
+      Shape  {
+         appearance Appearance {
+            material Material {
+          diffuseColor   1 1 1
+            }
+         }
+         geometry IndexedLineSet {
+            coord USE MYPOINTS
+            coordIndex [ 0, 23, 21, 11, 5, 2, 1, 0, 0, -1 ]
+         }
+      }
+
+      Shape  {
+         appearance Appearance {
+            material Material {
+          diffuseColor   1 1 1
+            }
+         }
+         geometry IndexedLineSet {
+            coord USE MYPOINTS
+            coordIndex [ 27, 29, 34, 36, 35, 27, 27, -1 ]
+         }
+      }
+
+      ]}

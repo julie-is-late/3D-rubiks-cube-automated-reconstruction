@@ -127,31 +127,28 @@ for i=1:n
 end
 edg1 = convhull(x1(1,:), x1(2,:));
 
-for i=1:n
-    if ismember(n, edg1)
-        ind1(n) = 0;
+% ind1 relative to X but edg1 RELATIVE TO X1
+for i=1:length(X)
+    if ismember(i, edg1)
+        ind1(i) = 0;
     end
 end
 
 polys{1} = [];
-[~,f] = size(edg1);
+[f,~] = size(edg1);
 for j=1:f
     for k=1:m
-        if (X(k) == X1(edg1(j)))
+        if (X(:,k) == X1(:,edg1(j)))
             polys{1} = [polys{1}, k];
         end
     end
 end
 
-% figure(6)
-% plotPoints(X1)
 
 X2set = X(:, ~ind1);
 [results2, options] = RANSAC(X2set, options);
 ind2 = results2.CS;
 X2 = X2set(:, ind2);
-% figure(7)
-% plotPoints(X2)
 
 [~,n] = size(X2);
 x2 = zeros(3, n);
@@ -161,28 +158,26 @@ for i=1:n
 end
 edg2 = convhull(x2(1,:), x2(2,:));
 
-for i=1:n
-    if ismember(n, edg2)
-        ind2(n) = 0;
+for i=1:length(X2set)
+    if ismember(i, edg2)
+        ind2(i) = 0;
     end
 end
 
 polys{2} = [];
-[~,f] = size(edg2);
+[f,~] = size(edg2);
 for j=1:f
     for k=1:m
-        if (X(k) == X2(edg2(j)))
+        if (X(:,k) == X2(:,edg2(j)))
             polys{2} = [polys{2}, k];
         end
     end
 end
 
-X3set = X(:, ~ind2);
+X3set = X2set(:, ~ind2);
 [results3, options] = RANSAC(X3set, options);
 ind3 = results3.CS;
 X3 = X3set(:, ind3);
-% figure(8)
-% plotPoints(X3)
 
 [~,n] = size(X3);
 x3 = zeros(3, n);
@@ -192,26 +187,34 @@ for i=1:n
 end
 edg3 = convhull(x3(1,:), x3(2,:));
 
-for i=1:n
-    if ismember(n, edg3)
-        ind3(n) = 0;
-    end
-end
-
 polys{3} = [];
-[~,f] = size(edg3);
+[f,~] = size(edg3);
 for j=1:f
     for k=1:m
-        if (X(k) == X3(edg3(j)))
+        if (X(:,k) == X3(:,edg3(j)))
             polys{3} = [polys{3}, k];
         end
     end
 end
 
+figure(9)
+plotPoints(X)
+figure(6)
+plotPoints(X(:,polys{1}))
 
-makeUntexturedModel('outputUntex.wrl', X, polys, [0 0 1 3.14], 1)
+figure(10)
+plotPoints(X2set)
+figure(7)
+plotPoints(X(:,polys{2}))
 
-world = vrworld('outputUntex.wrl');
+figure(11)
+plotPoints(X3set)
+figure(8)
+plotPoints(X(:,polys{3}))
+
+makeWireframe('output.wrl', X, polys, [0 0 1 3.14], 1)
+
+world = vrworld('output.wrl');
 open(world);
 view(world);
 
