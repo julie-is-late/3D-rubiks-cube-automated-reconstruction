@@ -66,7 +66,7 @@ x1 = [m1(2,:); m1(1,:); ones(1,length(m1))];
 x2 = [m2(2,:); m2(1,:); ones(1,length(m1))];    
     
 %t = .0001;  % Distance threshold for deciding outliers
-t = .0005;
+t = .001;
 
 % Change the commenting on the lines below to switch between the use
 % of 7 or 8 point fundamental matrix solutions, or affine
