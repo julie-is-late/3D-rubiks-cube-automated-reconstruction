@@ -30,12 +30,14 @@ dmax = 80;
 
 % Find Harris corners in image1 and image2
 [cim1, r1, c1] = harris(im1, smooth, thresh, nonmaxrad);
-show(im1,1), hold on, plot(c1,r1,'r+', 'LineWidth', 2);
 
 [cim2, r2, c2] = harris(im2, smooth, thresh, nonmaxrad);
-show(im2,2), hold on, plot(c2,r2,'r+', 'LineWidth', 2);
 
-drawnow;
+
+% show(im1,1), hold on, plot(c1,r1,'r+', 'LineWidth', 2);
+% show(im2,2), hold on, plot(c2,r2,'r+', 'LineWidth', 2);
+% 
+% drawnow;
 %pause;
 
 correlation = 1;  % Change this between 1 or 0 to switch between the two
@@ -53,10 +55,10 @@ else              % Use monogenic phase matching
 end    
 
 % Display putative matches
-show(double(im1)+double(im2),3), set(3,'name','Putative matches')
-for n = 1:length(m1);
-  line([m1(2,n) m2(2,n)], [m1(1,n) m2(1,n)], 'LineWidth', 2)
-end
+% show(double(im1)+double(im2),3), set(3,'name','Putative matches')
+% for n = 1:length(m1);
+%   line([m1(2,n) m2(2,n)], [m1(1,n) m2(1,n)], 'LineWidth', 2)
+% end
 
 %pause;
 
@@ -66,7 +68,7 @@ x1 = [m1(2,:); m1(1,:); ones(1,length(m1))];
 x2 = [m2(2,:); m2(1,:); ones(1,length(m1))];    
     
 %t = .0001;  % Distance threshold for deciding outliers
-t = .001;
+t = .0005;
 
 % Change the commenting on the lines below to switch between the use
 % of 7 or 8 point fundamental matrix solutions, or affine
@@ -80,13 +82,13 @@ fprintf('Number of inliers was %d (%d%%) \n', ...
 fprintf('Number of putative matches was %d \n', length(m1))        
 
 % Display both images overlayed with inlying matched feature points
-show(double(im1)+double(im2),4), set(4,'name','Inlying matches'), hold on
-plot(m1(2,inliers),m1(1,inliers),'r+', 'LineWidth', 2);
-plot(m2(2,inliers),m2(1,inliers),'g+', 'LineWidth', 2);
+% show(double(im1)+double(im2),4), set(4,'name','Inlying matches'), hold on
+% plot(m1(2,inliers),m1(1,inliers),'r+', 'LineWidth', 2);
+% plot(m2(2,inliers),m2(1,inliers),'g+', 'LineWidth', 2);
 
-for n = inliers
-  line([m1(2,n) m2(2,n)], [m1(1,n) m2(1,n)],'color',[0 0 1], 'LineWidth', 2)
-end
+% for n = inliers
+%   line([m1(2,n) m2(2,n)], [m1(1,n) m2(1,n)],'color',[0 0 1], 'LineWidth', 2)
+% end
 
 load('calib_final.mat', 'k');
 
@@ -97,8 +99,6 @@ k(2,3) = k(3,1)*1/3;
 
 [P1, P2, X] = get3dreconstruction(x1(1:2,inliers), x2(1:2,inliers), k);
 
-figure(5)
-plotPoints(X)
 
 options.epsilon = 1e-6;
 options.P_inlier = 0.95;
@@ -139,9 +139,9 @@ end
 polys{1} = [];
 [f,~] = size(edg1);
 for j=1:f
-    for k=1:m
-        if (X(:,k) == X1(:,edg1(j)))
-            polys{1} = [polys{1}, k];
+    for kl=1:m
+        if (X(:,kl) == X1(:,edg1(j)))
+            polys{1} = [kl, polys{1}];
         end
     end
 end
@@ -169,9 +169,9 @@ end
 polys{2} = [];
 [f,~] = size(edg2);
 for j=1:f
-    for k=1:m
-        if (X(:,k) == X2(:,edg2(j)))
-            polys{2} = [polys{2}, k];
+    for kl=1:m
+        if (X(:,kl) == X2(:,edg2(j)))
+            polys{2} = [kl,polys{2}];
         end
     end
 end
@@ -192,36 +192,43 @@ edg3 = convhull(x3(1,:), x3(2,:));
 polys{3} = [];
 [f,~] = size(edg3);
 for j=1:f
-    for k=1:m
-        if (X(:,k) == X3(:,edg3(j)))
-            polys{3} = [polys{3}, k];
+    for kl=1:m
+        if (X(:,kl) == X3(:,edg3(j)))
+            polys{3} = [kl, polys{3}];
         end
     end
 end
 
-figure(9)
+% figure(9)
+% plotPoints(X)
+% figure(6)
+% plotPoints(X(:,polys{1}))
+% 
+% figure(10)
+% plotPoints(X2set)
+% figure(7)
+% plotPoints(X(:,polys{2}))
+% 
+% figure(11)
+% plotPoints(X3set)
+% figure(8)
+% plotPoints(X(:,polys{3}))
+
+figure(5)
 plotPoints(X)
-figure(6)
-plotPoints(X(:,polys{1}))
 
-figure(10)
-plotPoints(X2set)
-figure(7)
-plotPoints(X(:,polys{2}))
+makeUntexturedModel('output.wrl', X, polys, [0 0 1 3.14], 1)
 
-figure(11)
-plotPoints(X3set)
-figure(8)
-plotPoints(X(:,polys{3}))
+makeWireframe('wirecube.wrl', X, polys, [0 0 1 3.14], 1)
+makeUntexturedModel('untexcube.wrl', X, polys, [0 0 1 3.14], 1)
 
-makeWireframe('output.wrl', X, polys, [0 0 1 3.14], 1)
-
-world = vrworld('output.wrl');
+world = vrworld('wirecube.wrl');
 open(world);
 view(world);
 
-
-
+world2 = vrworld('untexcube.wrl');
+open(world2);
+view(world2);
 
 
 
