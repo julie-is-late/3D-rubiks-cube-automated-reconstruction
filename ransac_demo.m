@@ -1,5 +1,6 @@
-close all
-clear
+clc;
+clear all;
+close all;
 
 addpath('images');
 addpath(genpath('RANSAC-Toolbox'));
@@ -112,18 +113,32 @@ options.stabilize = false;
 
 [results1, options] = RANSAC(X, options);
 ind1 = results1.CS;
-figure(6)
-plotPoints(X(:, ind1))
+X1 = X(:, ind1);
+% convert to 2d, get convex hull indeces, then add them back into X2 set
 
-X2 = X(:, ~ind1);
-[results2, options] = RANSAC(X2, options);
+[~,n] = size(X1);
+x1 = zeros(3, n);
+for i=1:n
+    temp = P1*X1(:,i);
+    x1(:,i) = temp / temp(3);
+end
+c = convhull(x1(1,:), x1(2,:));
+
+
+% figure(6)
+% plotPoints(X1)
+
+X2set = X(:, ~ind1);
+[results2, options] = RANSAC(X2set, options);
 ind2 = results2.CS;
-figure(7)
-plotPoints(X2(:, ind2))
+X2 = X2set(:, ind2);
+% figure(7)
+% plotPoints(X2)
 
-X3 = X(:, ~ind2);
-[results3, options] = RANSAC(X3, options);
+X3set = X(:, ~ind2);
+[results3, options] = RANSAC(X3set, options);
 ind3 = results3.CS;
-figure(8)
-plotPoints(X3(:, ind3))
+X3 = X3set(:, ind3);
+% figure(8)
+% plotPoints(X3)
 
