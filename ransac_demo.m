@@ -8,13 +8,15 @@ im1 = imread('13.jpg');
 im2 = imread('14.jpg');
 
 % select a single channel out of the images
-im1 = im1(1:3:end,1:3:end,1:3:end);
-im2 = im2(1:3:end,1:3:end,1:3:end);
+im1 = im1(1:3:end,1:3:end,1);
+im2 = im2(1:3:end,1:3:end,1);
+% im1 = im1(:,:,1);
+% im2 = im2(:,:,1);
 
 %smooth = 2;
-smooth = 1.5;
+smooth = 2;
 %thresh = 2000 ;  % Harris corner threshold
-thresh = 2000;
+thresh = 1800;
 %nonmaxrad = 10;  % Non-maximal suppression radius
 nonmaxrad = 10;
 %w = 91;         % Window size for correlation matching
@@ -61,7 +63,7 @@ x1 = [m1(2,:); m1(1,:); ones(1,length(m1))];
 x2 = [m2(2,:); m2(1,:); ones(1,length(m1))];    
     
 %t = .0001;  % Distance threshold for deciding outliers
-t = .0001;
+t = .0008;
 
 % Change the commenting on the lines below to switch between the use
 % of 7 or 8 point fundamental matrix solutions, or affine
@@ -84,19 +86,20 @@ for n = inliers
 end
 
 load('calib_final.mat', 'k');
-K = k;
 
-K = K*1/3;
-K(3,3) = 1;
+k(1,1) = k(1,1)*1/3;
+k(2,2) = k(2,2)*1/3;
+k(1,3) = k(3,1)*1/3;
+k(2,3) = k(3,1)*1/3;
 
-[P1, P2, X] = get3dreconstruction(x1(1:2,inliers), x2(1:2,inliers), K);
+[P1, P2, X] = get3dreconstruction(x1(1:2,inliers), x2(1:2,inliers), k);
 
 figure(5)
 plotPoints(X)
 
 options.epsilon = 1e-6;
-options.P_inlier = 0.99;
-options.sigma = 0.01;
+options.P_inlier = 0.95;
+options.sigma = 0.005;
 options.est_fun = @estimateplane;
 options.man_fun = @estimateplane_error;
 options.mode = 'MSAC';

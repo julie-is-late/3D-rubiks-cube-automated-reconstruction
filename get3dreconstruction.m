@@ -13,13 +13,13 @@ ps2n = T2n * ps2;
 
 % Build A
 A = buildFcoef(ps1n, ps2n);
-% Find Fn
 [~, ~, v] = svd(A);
 Fn = reshape(v(:,9), 3, 3)';
 [u, d, v] = svd(Fn);
 d(3,3) = 0;
 Fn = u*d*v';
 F = T1n' * Fn * T2n;
+
 
 % Verify that xFx' is close to 0
 [~,numpoints] = size(ps2);
